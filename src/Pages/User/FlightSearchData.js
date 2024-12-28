@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SearchBar from './SearchBar';
 import Filter from '../../Components/Layout/Filter';
 
-const FlightSearch = () => {
+const FlightSearchData = () => {
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -64,4 +64,4 @@ console.log(searchParams)
   );
 };
 
-export default FlightSearch;
+export default FlightSearchData;

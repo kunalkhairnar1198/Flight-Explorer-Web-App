@@ -1,0 +1,58 @@
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 10;
+  }
+  
+  .modal {
+    position: fixed;
+    /* bottom: 0.1px; */
+    transform: translateX(-50%);
+    padding: 1rem;
+    border-radius: 8px;
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
+    z-index: 100;
+    animation: slide-down 300ms ease-out forwards;
+  }
+  
+  .modal.closing {
+    animation: slide-up 300ms ease-out forwards;
+  }
+  
+  .content {
+    text-align: center;
+  }
+  
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-3rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slide-up {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-3rem);
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .modal {
+      width: 40rem;
+      left: calc(50% - 20rem);
+    }
+  }
+  
