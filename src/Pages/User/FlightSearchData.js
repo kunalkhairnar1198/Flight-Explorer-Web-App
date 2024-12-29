@@ -4,6 +4,7 @@ import allFlights from '../../FlightData/FlightDataind.json';
 import { useDispatch } from 'react-redux';
 import { UiActions } from '../../Reduxstore/Ui-slice/ui-slice';
 import { NavLink } from 'react-router';
+import Filter from '../../Components/Layout/Filter';
 
 const FlightSearchData = () => {
   const [flights, setFlights] = useState([]);
@@ -52,6 +53,7 @@ const FlightSearchData = () => {
   return (
     <div className="container mx-auto p-4">
       <SearchBar searchFlights={searchFlights} />
+      {/* <Filter/> */}
       <div className="mt-6">
         <h2 className="text-xl font-bold mb-2">Available Flights</h2>
 

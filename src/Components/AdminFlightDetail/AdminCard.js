@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import flightData from '../../FlightData/Flightdata.json'
+import flightData from '../../FlightData/FlightDataind.json'
 import { getAllBookings } from "../../IndexDb/FlightBookingDb";
 
 const AdminCard = (props) => {
