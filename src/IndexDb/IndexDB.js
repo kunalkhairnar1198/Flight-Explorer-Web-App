@@ -17,3 +17,5 @@ export const getUserByEmail = async (email) => {
   const db = await dbPromise;
   return await db.get('users', email);
 };
+
+

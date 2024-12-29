@@ -1,16 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "../../UI/Modal";
 import { useDispatch } from "react-redux";
 import { UiActions } from "../../Reduxstore/Ui-slice/ui-slice";
+import { getAllBookings, saveBooking } from "../../IndexDb/FlightBookingDb";
 
-function PaymentGateway() {
+function PaymentGateway(props) {
+  
+  const [cardDetails, setCardDetails] = useState({
+    username: "",
+    cardNumber: "",
+    expiryMonth: "01",
+    expiryYear: "2024",
+    securityCode: "",
+  });
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const { data } = props;
+  const { email } = JSON.parse(localStorage.getItem("loggedInUser"));
+  // console.log(email, props);
 
-  const closeHandler =()=>{
-    dispatch(UiActions.isOpenHandle(false))
-  }
+  const closeHandler = () => {
+    dispatch(UiActions.isOpenHandle(false));
+  };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCardDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+  };
+
+  // console.log(cardDetails.username);
+
+  const PaymentProcessHandler = async (email, data) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000)); 
+
+      const bookingData = {
+        id: `${email}-${data.id}`,
+        userId: data.id,
+        name: cardDetails.username,
+        flightName: data.airline,
+        price: data.discountPrice,
+        cardNumber: cardDetails.cardNumber,
+        date: new Date().toISOString(),
+        status:false,
+        data,
+      };
+      await saveBooking(bookingData);
+      const bokdata = await getAllBookings()
+      console.log('GEtallbooking',bokdata)
+      console.log("---------", bookingData,);
+      alert("succesfully booked seat");
+      closeHandler();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+ 
 
   return (
     <Modal onClick={closeHandler}>
@@ -75,6 +124,9 @@ function PaymentGateway() {
                 className="w-full px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
                 placeholder="John Smith"
                 type="text"
+                name="username"
+                value={cardDetails.username}
+                onChange={handleInputChange}
               />
             </div>
           </div>
@@ -85,6 +137,9 @@ function PaymentGateway() {
                 className="w-full px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
                 placeholder="0000 0000 0000 0000"
                 type="text"
+                name="cardNumber"
+                value={cardDetails.cardNumber}
+                onChange={handleInputChange}
               />
             </div>
           </div>
@@ -94,7 +149,12 @@ function PaymentGateway() {
                 Expiration date
               </label>
               <div>
-                <select className="form-select w-full px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer">
+                <select
+                  name="expiryMonth"
+                  value={cardDetails.expiryMonth}
+                  onChange={handleInputChange}
+                  className="form-select w-full px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+                >
                   <option value="01">01 - January</option>
                   <option value="02">02 - February</option>
                   <option value="03">03 - March</option>
@@ -111,7 +171,12 @@ function PaymentGateway() {
               </div>
             </div>
             <div className="px-2 w-1/2">
-              <select className="form-select w-full px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer">
+              <select
+                name="expiryYear"
+                value={cardDetails.expiryYear}
+                onChange={handleInputChange}
+                className="form-select w-full px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+              >
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
                 <option value="2022">2022</option>
@@ -132,19 +197,23 @@ function PaymentGateway() {
                 className="w-32 px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
                 placeholder="000"
                 type="text"
+                name="securityCode"
+                value={cardDetails.securityCode}
+                onChange={handleInputChange}
               />
             </div>
           </div>
           <div>
             <button
-            onClick={closeHandler}
-            className="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold">
+              onClick={() => PaymentProcessHandler(email, data)}
+              className="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold"
+            >
               <i className="mdi mdi-lock-outline mr-1"></i> PAY NOW
             </button>
           </div>
         </div>
       </div>
-      </Modal>
+    </Modal>
   );
 }
 

@@ -1,6 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 const Header = ({ setSidebarOpen }) => {
+  const navigate = useNavigate()
+  const profileName = JSON.parse(localStorage.getItem('loggedInUser'))
+
+  const logoutHandler = () => {
+    localStorage.clear();
+    navigate("/");
+    alert("You have been logged out due to inactivity.");
+  };
+
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-white border-b-4 border-indigo-600">
       <div className="flex items-center">
@@ -50,19 +60,15 @@ const Header = ({ setSidebarOpen }) => {
       <div className="flex items-center">
         <div className="hidden sm:ml-6 sm:flex sm:items-center">
           <button
-            // onClick={logoutHandler}
+            onClick={logoutHandler}
             className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-2 rounded-md text-sm font-medium"
           >
             logout
           </button>
         </div>
         <div className="relative">
-          <button className="relative block w-8 h-8 overflow-hidden rounded-full shadow focus:outline-none">
-            <img
-              className="object-cover w-full h-full"
-              src="https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-1.2.1&auto=format&fit=crop&w=296&q=80"
-              alt="Your avatar"
-            />
+          <button className="relative block w-8 h-8 overflow-hidden bg-red-500 rounded-full shadow focus:outline-none">
+           {profileName.name}
           </button>
         </div>
       </div>

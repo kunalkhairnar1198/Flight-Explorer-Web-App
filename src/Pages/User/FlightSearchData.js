@@ -1,43 +1,57 @@
-import React, { useState } from 'react';
+import React, {  useCallback,  useState } from 'react';
 import SearchBar from './SearchBar';
-import Filter from '../../Components/Layout/Filter';
+import allFlights from '../../FlightData/FlightDataind.json';
+import { useDispatch } from 'react-redux';
+import { UiActions } from '../../Reduxstore/Ui-slice/ui-slice';
+import { NavLink } from 'react-router';
 
 const FlightSearchData = () => {
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchFlights = async (searchParams) => {
-    const apiKey = '107fb0c66534ce7b84fdfe728711829c'; // Replace with your AviationStack API key
-    const { tripType, destinations, departureDate, returnDate } = searchParams;
-console.log(searchParams)
+  const dispatch = useDispatch();
+
+  const isOpenPaymentHandler = () => {
+    dispatch(UiActions.isOpenHandle(true));
+  };
+
+
+
+  const searchFlights =  useCallback((searchParams) => {
+    const { departure, destinations, departureDate, arrivalDate, tripType } = searchParams;
+
     setLoading(true);
     setError('');
     setFlights([]);
+    
 
     try {
-      const apiUrl = `https://api.aviationstack.com/v1/flights?access_key=${apiKey}&date=${departureDate}`;
+      const filteredFlights = allFlights.filter((flight) => {
+        const isDepartureMatch = flight.origin.toLowerCase().includes(departure.toLowerCase());
+        const isDestinationMatch = destinations.some((destination) =>
+          flight.destination.toLowerCase().includes(destination.toLowerCase())
+        );
+        const isDateMatch = !departureDate || flight.departureTime.startsWith(departureDate);
+        return isDepartureMatch && isDestinationMatch && isDateMatch;
+      });
 
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-        console.log(data.data)
-      if (data?.data?.length > 0) {
-        console.log(data.data)
-        setFlights(data.data);
+      if (filteredFlights.length > 0) {
+        setFlights(filteredFlights);
       } else {
-        setError('No flights found for the selected date.');
+        setError('No flights found for the selected criteria.');
       }
     } catch (err) {
-      setError('Failed to fetch flights. Please try again later.');
+      setError('An error occurred while searching for flights.');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
+  
   return (
     <div className="container mx-auto p-4">
-      <SearchBar onSearch={fetchFlights} />
-      <Filter/>
+      <SearchBar searchFlights={searchFlights} />
       <div className="mt-6">
         <h2 className="text-xl font-bold mb-2">Available Flights</h2>
 
@@ -45,17 +59,76 @@ console.log(searchParams)
         {error && <p className="text-red-500">{error}</p>}
 
         {!loading && flights.length > 0 && (
-          <ul>
-            {flights.map((flight, index) => (
-              <li key={index} className="mb-4 border p-4 rounded">
-                <p><strong>Airline:</strong> {flight.airline?.name || 'N/A'}</p>
-                <p><strong>Flight Number:</strong> {flight.flight?.iata || 'N/A'}</p>
-                <p><strong>Departure:</strong> {flight.departure?.airport} at {new Date(flight.departure?.scheduled).toLocaleString() || 'N/A'}</p>
-                <p><strong>Arrival:</strong> {flight.arrival?.airport} at {new Date(flight.arrival?.scheduled).toLocaleString() || 'N/A'}</p>
-                <p><strong>Status:</strong> {flight.flight_status || 'N/A'}</p>
-              </li>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {flights.map((flight) => (
+             <div className="max-w-md bg-white shadow-lg rounded-lg overflow-hidden" key={flight.id}>
+             <div className="p-4">
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center">
+                   <div className="ml-4">
+                     <h2 className="text-lg font-semibold">{flight.airline}</h2>
+                     <p className="text-sm text-gray-600">{flight.flightId}</p>
+                   </div>
+                 </div>
+                 <div className="text-right">
+                   <p className="text-lg font-semibold">₹ {flight.price}</p>
+                   <p className="text-sm text-gray-600">per adult</p>
+                 </div>
+               </div>
+   
+               <div className="mt-4">
+                 <div className="flex justify-between items-center">
+                   <div>
+                     <p className="text-lg font-semibold">
+                       {new Date(flight.departureTime).toLocaleTimeString([], {
+                         hour: '2-digit',
+                         minute: '2-digit',
+                       })}
+                     </p>
+                     <p className="text-sm text-gray-600">{flight.origin}</p>
+                   </div>
+                   <div className="text-center">
+                     <p className="text-sm text-gray-600">
+                       {new Date(flight.arrivalTime).toLocaleTimeString([], {
+                         hour: '2-digit',
+                         minute: '2-digit',
+                       })}
+                     </p>
+                     <p className="text-sm text-green-600">Estimated</p>
+                   </div>
+                   <div className="ml-6">
+                     <p className="text-lg text-end font-semibold">
+                       {new Date(flight.arrivalTime).toLocaleTimeString([], {
+                         hour: '2-digit',
+                         minute: '2-digit',
+                       })}
+                     </p>
+                     <p className="text-sm text-end text-gray-600">{flight.destination}</p>
+                   </div>
+                 </div>
+               </div>
+   
+               <div className="mt-2">
+                 <p className="text-sm text-red-600">Get FLAT ₹ 115 OFF using code MMTSUPER</p>
+               </div>
+   
+               <div className="mt-4 flex justify-between items-center">
+                 <button onClick={isOpenPaymentHandler} className="bg-blue-500 text-white px-4 py-1 rounded">
+                   Book NOW
+                 </button>
+                 <p className="text-sm text-gray-600">Lock this price starting from ₹ 287</p>
+               </div>
+   
+               <div className="mt-4 text-right">
+                 <NavLink to={`/flightdetail/${flight.id}`} state={flight} className="text-blue-500 text-sm">
+                   View Flight Details
+                 </NavLink>
+               </div>
+             </div>
+           </div>
+   
             ))}
-          </ul>
+          </div>
         )}
 
         {!loading && flights.length === 0 && !error && <p>No flights available. Please modify your search.</p>}

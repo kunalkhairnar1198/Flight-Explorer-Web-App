@@ -1,12 +1,21 @@
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import modelcls from './Modal.module.css';
+import { useDispatch } from 'react-redux';
+import { UiActions } from '../Reduxstore/Ui-slice/ui-slice';
 
 const Backdrop = (props) => {
+
+  const dispatch = useDispatch()
+
+    const closeHandler =()=>{
+        dispatch(UiActions.isOpenHandle(false))
+    }
+
   return (
     <div
       className={modelcls.backdrop}
-      onClick={props.onClose} 
+      onClick={closeHandler} 
     />
   );
 };

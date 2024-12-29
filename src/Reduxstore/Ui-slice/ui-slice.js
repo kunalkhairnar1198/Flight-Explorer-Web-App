@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState ={
     isOpen:false,
     isMobOpen:false,
+    isSearchActive:true,
 }
 
 const UiSlice = createSlice({
@@ -14,6 +15,9 @@ const UiSlice = createSlice({
      },
      isOpenMobileHanlde(state, action){
           state.isMobOpen = !state.isMobOpen
+     },
+     isSearchFlgihtCardClose(state,action){
+          state.isMobOpen = action.payload
      }
     },
   });
