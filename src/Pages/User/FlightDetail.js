@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Mainnavigation from "../../Components/Layout/Mainnavigation";
 import { useDispatch, useSelector } from "react-redux";
 import { UiActions } from "../../Reduxstore/Ui-slice/ui-slice";
 import PaymentGateway from "../../Components/Payment/PaymentGateway";
 import {  NavLink, useLocation, useNavigate } from "react-router";
+import BookingConfirmation from "./BookingConfirmation";
 
 const FlightDetailPage = () => {
   const dispatch = useDispatch();
   const isState = useSelector((state) => state.ui.isOpen);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isConfirm, setIsConfirm] = useState(false)
+  const [id, setId]= useState(null)
 
   const flightData = location.state || {};
   console.log(flightData);
@@ -23,6 +26,13 @@ const FlightDetailPage = () => {
   const BackpageHandler = () => {
     navigate("/layout");
   };
+
+  const HandleGetUserId =(id)=>{
+      // console.log(id)
+      setIsConfirm(true)
+      setId(id)
+
+  }
  
   if (!flightData) {
     return (
@@ -35,7 +45,9 @@ const FlightDetailPage = () => {
 
   return (
     <Mainnavigation>
-      {isState && <PaymentGateway data={flightData} />}
+       {isConfirm && <BookingConfirmation data={id}/>}
+      {isState && <PaymentGateway data={flightData} onGetUserId={HandleGetUserId}  />}
+     
       <div className="bg-white p-4 lg:max-w-7xl max-w-4xl  mx-auto">
         <div className="grid items-start grid-cols-1 lg:grid-cols-7 gap-12 shadow-[0_2px_10px_-3px_rgba(169,170,172,0.8)] p-6 rounded">
           <button

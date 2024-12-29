@@ -8,12 +8,15 @@ import FlightSearchData from '../../Pages/User/FlightSearchData'
 
 const Layout = (props) => {
 
+
   const isState = useSelector((state) =>state.ui.isOpen )
   console.log(isState)
 
+ 
+
   return (
     <>
-    {isState &&  <PaymentGateway />}
+    {isState &&  <PaymentGateway  />}
     <div className="bg-background min-h-screen">
         <Mainnavigation />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

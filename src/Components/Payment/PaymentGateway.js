@@ -5,7 +5,6 @@ import { UiActions } from "../../Reduxstore/Ui-slice/ui-slice";
 import { getAllBookings, saveBooking } from "../../IndexDb/FlightBookingDb";
 
 function PaymentGateway(props) {
-  
   const [cardDetails, setCardDetails] = useState({
     username: "",
     cardNumber: "",
@@ -48,11 +47,13 @@ function PaymentGateway(props) {
         status:false,
         data,
       };
+
       await saveBooking(bookingData);
       const bokdata = await getAllBookings()
       console.log('GEtallbooking',bokdata)
       console.log("---------", bookingData,);
-      alert("succesfully booked seat");
+      // alert("succesfully booked seat");
+      props.onGetUserId(bookingData.userId)
       closeHandler();
     } catch (error) {
       console.log(error);
@@ -63,6 +64,7 @@ function PaymentGateway(props) {
 
   return (
     <Modal onClick={closeHandler}>
+
       <div className="flex items-center justify-center min-h-full px-2 pb-10 pt-15">
         <div
           className="w-50 mx-auto rounded-lg bg-white shadow-lg p-5 text-gray-700"

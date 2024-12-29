@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavLink, useNavigate } from "react-router";
 import useInactive from "../../Hook/useInactive";
 import JetImage from '../../assets/JET.png'
