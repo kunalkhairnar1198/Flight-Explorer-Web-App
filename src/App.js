@@ -3,25 +3,42 @@ import Layout from "./Components/Layout/Layout";
 import AuthForm from "./Pages/Auth/AuthForm";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import Adminlayout from "./Components/Adminlayout/Adminlayout";
+import FlightDetailPage from "./Pages/User/FlightDetail";
 
 function App() {
   return (
     <>
-        <Routes>
-          <Route path="/" element={<AuthForm/>}/>
-          <Route path="/layout" element={
-            <ProtectedRoute allowedRole={['user','admin']}>
-              <Layout/>
+      <Routes>
+        <Route path="/" element={<AuthForm />} />
+        <Route
+          path="/layout"
+          element={
+            <ProtectedRoute allowedRole={["user", "admin"]}>
+              <Layout />
             </ProtectedRoute>
-          }/>
+          }
+        />
 
-          <Route path="/admin" element={
-            <ProtectedRoute allowedRole={['admin']}>
-              <Adminlayout/>
+       
+
+        <Route
+          path="/flightdetail/:id"
+          element={
+            <ProtectedRoute allowedRole={["user", "admin"]}>
+              <FlightDetailPage />
             </ProtectedRoute>
-          }/>
+          }
+        />
 
-        </Routes>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRole={["admin"]}>
+              <Adminlayout />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </>
   );
 }

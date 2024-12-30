@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import useDebounce from '../../Hook/useDebaounce';
 
-const SearchBar = ({ onSearch }) => {
-  const [tripType, setTripType] = useState('one-way'); 
-  const [destinations, setDestinations] = useState(['', '', '']); 
-  const [departure, setDeparture] = useState(''); 
-  const [destination, setDestination] = useState(''); 
-  const [departureDate, setDepartureDate] = useState(''); 
-  const [returnDate, setReturnDate] = useState(''); 
+const SearchBar = ({ searchFlights }) => {
+  const [tripType, setTripType] = useState('one-way');
+  const [departure, setDeparture] = useState('');
+  const [destinations, setDestinations] = useState(['']);
+  const [departureDate, setDepartureDate] = useState('');
+  const [arrivalDate, setArrivalDate] = useState('');
 
-  const handleTripTypeChange = (type) => {
-    setTripType(type);
-    setDestinations(['', '', '']);
-    setDestination('');
-    setReturnDate('');
-  };
+  const debouncedDeparture = useDebounce(departure, 500);  
+  const debouncedDestinations = useDebounce(destinations, 500);  
+
+  const searchParams = useMemo(() => {
+    return {
+      tripType,
+      departure: debouncedDeparture,
+      destinations: debouncedDestinations,
+      departureDate,
+      arrivalDate 
+    };
+  }, [debouncedDeparture, debouncedDestinations, tripType, departureDate, arrivalDate]);
+
+  useEffect(() => {
+    if (searchParams.departure || searchParams.destinations.some(Boolean)) {
+      searchFlights(searchParams);
+    }
+  }, [searchParams, searchFlights]);
 
   const handleDestinationChange = (index, value) => {
     const updatedDestinations = [...destinations];
@@ -21,30 +33,23 @@ const SearchBar = ({ onSearch }) => {
     setDestinations(updatedDestinations);
   };
 
-  // Handles form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(tripType, destination,departure,departureDate,returnDate,destinations)
-    const searchParams = {
-      tripType,
-      departure,
-      destination: tripType === 'multi-city' ? destinations : destination,
-      departureDate,
-      returnDate,
-    };
-    console.log(searchParams)
-    onSearch(searchParams);
+  const addDestination = () => {
+    setDestinations([...destinations, '']);
+  };
+
+  const removeDestination = (index) => {
+    setDestinations(destinations.filter((_, i) => i !== index));
   };
 
   return (
-    <form className="bg-card p-6 rounded-lg shadow-lg space-y-6" onSubmit={handleSubmit}>
-      {/* Trip type selection */}
+    <form className="bg-card p-6 rounded-lg shadow-lg space-y-6" onSubmit={(e) => e.preventDefault()}>
+      {/* Trip Type Buttons */}
       <div className="flex justify-between mb-4">
         {['one-way', 'round-trip', 'multi-city'].map((type) => (
           <button
             key={type}
             type="button"
-            onClick={() => handleTripTypeChange(type)}
+            onClick={() => setTripType(type)}
             className={`w-1/3 py-2 text-center ${tripType === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
           >
             {type.replace('-', ' ').toUpperCase()}
@@ -52,7 +57,7 @@ const SearchBar = ({ onSearch }) => {
         ))}
       </div>
 
-      {/* Departure and destination inputs */}
+      {/* Departure and Destinations */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
           <label className="block text-gray-500 font-bold mb-1">Departure</label>
@@ -65,38 +70,57 @@ const SearchBar = ({ onSearch }) => {
             required
           />
         </div>
-        {tripType === 'multi-city'
-          ? destinations.map((destination, index) => (
-              <div key={index}>
-                <label className="block text-gray-500 font-bold mb-1">
-                  Destination {index + 1}
-                </label>
-                <input
-                  type="text"
-                  value={destination}
-                  onChange={(e) => handleDestinationChange(index, e.target.value)}
-                  className="bg-gray-200 border rounded w-full py-2 px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
-                  placeholder="City or Airport"
-                  required
-                />
-              </div>
-            ))
-          : (
-            <div>
-              <label className="block text-gray-500 font-bold mb-1">Destination</label>
+
+        {tripType === 'multi-city' ? (
+          destinations.map((destination, index) => (
+            <div key={index} className="relative">
+              <label className="block text-gray-500 font-bold mb-1">
+                Destination {index + 1}
+              </label>
               <input
                 type="text"
                 value={destination}
-                onChange={(e) => setDestination(e.target.value)}
+                onChange={(e) => handleDestinationChange(index, e.target.value)}
                 className="bg-gray-200 border rounded w-full py-2 px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
                 placeholder="City or Airport"
                 required
               />
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeDestination(index)}
+                  className="absolute top-0 right-0 text-red-500"
+                >
+                  ✖
+                </button>
+              )}
             </div>
-          )}
+          ))
+        ) : (
+          <div>
+            <label className="block text-gray-500 font-bold mb-1">Destination</label>
+            <input
+              type="text"
+              value={destinations[0]}
+              onChange={(e) => handleDestinationChange(0, e.target.value)}
+              className="bg-gray-200 border rounded w-full py-2 px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
+              placeholder="City or Airport"
+              required
+            />
+          </div>
+        )}
       </div>
 
-      {/* Dates */}
+      {tripType === 'multi-city' && (
+        <button
+          type="button"
+          onClick={addDestination}
+          className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+        >
+          + Add Destination
+        </button>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
           <label className="block text-gray-500 font-bold mb-1">Departure Date</label>
@@ -113,15 +137,14 @@ const SearchBar = ({ onSearch }) => {
             <label className="block text-gray-500 font-bold mb-1">Return Date</label>
             <input
               type="date"
-              value={returnDate}
-              onChange={(e) => setReturnDate(e.target.value)}
+              value={arrivalDate}
+              onChange={(e) => setArrivalDate(e.target.value)}
               className="bg-gray-200 border rounded w-full py-2 px-4 text-gray-700 focus:outline-none focus:bg-white focus:border-purple-500"
             />
           </div>
         )}
       </div>
 
-      {/* Submit Button */}
       <div className="flex justify-end">
         <button
           type="submit"

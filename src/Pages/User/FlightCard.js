@@ -1,110 +1,108 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { UiActions } from '../../Reduxstore/Ui-slice/ui-slice';
 import { NavLink } from 'react-router';
-
-const FlightCard = () => {
-
-    
-    const [flightData, setFlights] = useState([])
+import FlightData from '../../FlightData/FlightDataind.json'
 
 
-    const fetchFlights = async() =>{
-        const apiKey = '107fb0c66534ce7b84fdfe728711829c'; 
+const FlightCard = (props) => {
+  const [flightData, setFlights] = useState([]);
+  const dispatch = useDispatch();
 
-        try {
-            const apiUrl = `https://api.aviationstack.com/v1/flights?access_key=${apiKey}`;
-      
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-              console.log(data.data)
-            if (data?.data?.length > 0) {
-              console.log(data.data)
-              setFlights(data.data);
-            } 
-            // else {
-            //   setError('No flights found for the selected date.');
-            // }
-          } catch (err) {
-            console.log(err)
-            // setError('Failed to fetch flights. Please try again later.');
-          } finally {
-            console.log('here')
-          }
-        };
+  const isOpenPaymentHandler = () => {
+    dispatch(UiActions.isOpenHandle(true));
+  };
 
+  const generateRandomPrice = (min = 3000, max = 10000) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
 
-    useEffect(()=>{
-        fetchFlights()
-        // console.log(flightData)
-    },[])
-    
+  const calculateDiscount = (originalPrice, discountRate = 20) => {
+    return Math.floor(originalPrice - (originalPrice * discountRate) / 100);
+  };
 
+  useEffect(() => {
+    const updatedFlights = FlightData.map((flight) => {
+      const originalPrice = flight.price || generateRandomPrice();
+      const discountPrice = calculateDiscount(originalPrice);
 
+      return { ...flight, price: originalPrice, discountPrice, id: Math.random().toString() };
+    });
 
-    return (
-        <>
-        {flightData.map((flight, index) => (
+    setFlights(updatedFlights);
+  }, []);
+
+  return (
+    <>
+      {flightData.map((flight, index) => (
         <div className="max-w-md bg-white shadow-lg rounded-lg overflow-hidden" key={index}>
-                <div className="p-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                        <div className="ml-4">
-                            <h2 className="text-lg font-semibold">{flight.airline.name}</h2>
-                            <p className="text-sm text-gray-600">{flight.flight.iata}</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-lg font-semibold">₹ 5,932</p>
-                        <p className="text-sm text-gray-600">per adult</p>
-                    </div>
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="ml-4">
+                  <h2 className="text-lg font-semibold">{flight.airline}</h2>
+                  <p className="text-sm text-gray-600">{flight.flightId}</p>
                 </div>
-                <div className="mt-4">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <p className="text-lg font-semibold"> {new Date(flight.departure.scheduled).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}</p>
-                            <p className="text-sm text-gray-600">{flight.departure.airport}</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-sm text-gray-600"> {new Date(flight.arrival.scheduled).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}</p>
-                            <p className="text-sm text-green-600">{flight.arrival.airport}</p>
-                        </div>
-                        <div>
-                            <p className="text-lg font-semibold">08:15</p>
-                            <p className="text-sm text-gray-600">Mumbai</p>
-                        </div>
-                        <div>
-                            <p
-                            className={`text-sm ${
-                                flight.flight_status === 'scheduled'
-                                ? 'text-blue-600'
-                                : flight.flight_status === 'active'
-                                ? 'text-green-600'
-                                : 'text-red-600'
-                            }`}
-                            >
-                            Status: {flight.flight_status}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-4">
-                    <p className="text-sm text-red-600">Get FLAT ₹ 115 OFF using code MMTSUPER</p>
-                </div>
-                <div className="mt-4 flex justify-between items-center">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded">VIEW PRICES</button>
-                    <p className="text-sm text-gray-600">Lock this price starting from ₹ 287</p>
-                </div>
-                <div className="mt-4 text-right">
-                    <NavLink  className="text-blue-500 text-sm">View Flight Details</NavLink>
-                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-lg font-semibold">₹ {flight.discountPrice}</p>
+                <p className="text-sm text-gray-600">per adult</p>
+              </div>
             </div>
-        </div>))}
-        </>
+
+            <div className="mt-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-lg font-semibold">
+                    {new Date(flight.departureTime).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                  <p className="text-sm text-gray-600">{flight.origin}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-600">
+                    {new Date(flight.arrivalTime).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                  <p className="text-sm text-green-600">Estimated</p>
+                </div>
+                <div className="ml-6">
+                  <p className="text-lg text-end font-semibold">
+                    {new Date(flight.arrivalTime).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                  <p className="text-sm text-end text-gray-600">{flight.destination}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-2">
+              <p className="text-sm text-red-600">Get FLAT ₹ 115 OFF using code MMTSUPER</p>
+            </div>
+
+            <div className="mt-4 flex justify-between items-center">
+              <button onClick={isOpenPaymentHandler} className="bg-blue-500 text-white px-4 py-1 rounded">
+                Book NOW
+              </button>
+              <p className="text-sm text-gray-600">Lock this price starting from ₹ 287</p>
+            </div>
+
+            <div className="mt-4 text-right">
+              <NavLink to={`/flightdetail/${flight.id}`} state={flight} className="text-blue-500 text-sm">
+                View Flight Details
+              </NavLink>
+            </div>
+          </div>
+        </div>
+      ))}
+    </>
   );
-}
+};
+
 export default FlightCard;
