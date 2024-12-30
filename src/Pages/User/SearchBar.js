@@ -17,7 +17,7 @@ const SearchBar = ({ searchFlights }) => {
       departure: debouncedDeparture,
       destinations: debouncedDestinations,
       departureDate,
-      arrivalDate
+      arrivalDate 
     };
   }, [debouncedDeparture, debouncedDestinations, tripType, departureDate, arrivalDate]);
 

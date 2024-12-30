@@ -4,6 +4,7 @@ const initialState ={
     isOpen:false,
     isMobOpen:false,
     isSearchActive:true,
+    isOpenBookigs:false,
 }
 
 const UiSlice = createSlice({
@@ -18,7 +19,11 @@ const UiSlice = createSlice({
      },
      isSearchFlgihtCardClose(state,action){
           state.isMobOpen = action.payload
+     },
+     isBookingsCartOpen(state, action){
+          state.isOpenBookigs = action.payload
      }
+
     },
   });
 

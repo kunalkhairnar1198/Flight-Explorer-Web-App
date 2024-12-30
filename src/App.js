@@ -8,27 +8,37 @@ import FlightDetailPage from "./Pages/User/FlightDetail";
 function App() {
   return (
     <>
-        <Routes>
-          <Route path="/" element={<AuthForm/>}/>
-          <Route path="/layout" element={
-            <ProtectedRoute allowedRole={['user','admin']}>
-              <Layout/>
+      <Routes>
+        <Route path="/" element={<AuthForm />} />
+        <Route
+          path="/layout"
+          element={
+            <ProtectedRoute allowedRole={["user", "admin"]}>
+              <Layout />
             </ProtectedRoute>
-          }/>
+          }
+        />
 
-          <Route path="/flightdetail/:id" element={
-            <ProtectedRoute allowedRole={['user','admin']}>
-              <FlightDetailPage/>
+       
+
+        <Route
+          path="/flightdetail/:id"
+          element={
+            <ProtectedRoute allowedRole={["user", "admin"]}>
+              <FlightDetailPage />
             </ProtectedRoute>
-          }/>
+          }
+        />
 
-          <Route path="/admin" element={
-            <ProtectedRoute allowedRole={['admin']}>
-              <Adminlayout/>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRole={["admin"]}>
+              <Adminlayout />
             </ProtectedRoute>
-          }/>
-
-        </Routes>
+          }
+        />
+      </Routes>
     </>
   );
 }
