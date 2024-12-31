@@ -126,15 +126,27 @@ const Mainnavigation = (props) => {
               <NavLink className="text-muted-foreground hover:bg-muted hover:text-primary block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium">
                 About
               </NavLink>
-              <NavLink className="text-muted-foreground hover:bg-muted hover:text-primary block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium">
-                Contact
-              </NavLink>
-              <NavLink className="text-muted-foreground hover:bg-muted hover:text-primary block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium">
-                Login
-              </NavLink>
-              <NavLink className="text-muted-foreground hover:bg-muted hover:text-primary block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium">
-                Profile
-              </NavLink>
+              <div className="lg:ml-6 lg:flex lg:items-center ">
+              <button
+                onClick={BookingCartOpen}
+                className="text-muted-foreground hover:text-primary inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-primary text-sm font-medium"
+              >
+                <span
+                  className="tracking-wider text-white bg-orange-500 px-4 py-1 text-sm rounded leading-loose mx-2 font-semibold"
+                >
+                  <h1 className="text-white-500 "> Bookings - {bookedSeats}</h1> 
+                </span>
+              </button>
+              <button 
+                onClick={logoutHandler}
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                logout
+              </button>
+              <button className="ml-4 bg-accent text-accent-foreground hover:bg-accent/80 px-3 py-2 rounded-md text-sm font-medium">
+                {profileName.name}
+              </button>
+            </div>
             </div>
           </div>
         )}
