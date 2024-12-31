@@ -43,7 +43,7 @@ const Mainnavigation = (props) => {
   };
 
   //for inactive session close
-  // useInactive(logoutHandler ,10000)
+  useInactive(logoutHandler ,10000)
 
   return (
     <>
