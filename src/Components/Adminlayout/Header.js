@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import useInactive from "../../Hook/useInactive";
 
 const Header = ({ setSidebarOpen }) => {
   const navigate = useNavigate()
@@ -10,6 +11,8 @@ const Header = ({ setSidebarOpen }) => {
     navigate("/");
     alert("You have been logged out due to inactivity.");
   };
+
+  useInactive(logoutHandler ,50000)
 
   return (
     <header className="flex items-center  justify-between px-6 py-4 bg-white border-b-4 border-indigo-600">
@@ -36,7 +39,7 @@ const Header = ({ setSidebarOpen }) => {
       </div>
 
       <div className="flex items-center">
-        <div className="hidden sm:ml-6 sm:flex sm:items-center">
+        <div className="sm:ml-6 sm:flex sm:items-center">
           <button
             onClick={logoutHandler}
             className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-2 rounded-md text-sm font-medium"

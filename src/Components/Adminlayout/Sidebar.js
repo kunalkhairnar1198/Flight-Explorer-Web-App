@@ -19,7 +19,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, handleSidebarClick }) => {
               />
             </div>
             <div className="text-primary-foreground hover:text-primary inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-primary text-sm font-medium">
-              <h3 className="text-xl font-bold text-yellow-50">
+              <h3 onClick={()=>setSidebarOpen(false)} className="text-xl font-bold text-yellow-50">
                 Flight Explore
               </h3>
             </div>
