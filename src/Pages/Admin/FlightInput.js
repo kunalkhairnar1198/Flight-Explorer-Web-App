@@ -29,10 +29,10 @@ const FlightInput = () => {
       [name]: value,
     }));
   };
+  console.log(flightFormData)
 
   const addProductHandler = async (e) => {
     e.preventDefault();
-    // Your submit logic here
   };
 
   return (

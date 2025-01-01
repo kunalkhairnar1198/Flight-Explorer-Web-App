@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { UiActions } from '../../Reduxstore/Ui-slice/ui-slice';
+// import { useDispatch } from 'react-redux';
+// import { UiActions } from '../../Reduxstore/Ui-slice/ui-slice';
 import { NavLink } from 'react-router';
 import FlightData from '../../FlightData/FlightDataind.json'
 
 
 const FlightCard = (props) => {
   const [flightData, setFlights] = useState([]);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const isOpenPaymentHandler = () => {
-    dispatch(UiActions.isOpenHandle(true));
-  };
+  // const isOpenPaymentHandler = () => {
+  //   dispatch(UiActions.isOpenHandle(true));
+  // };
 
   const generateRandomPrice = (min = 3000, max = 10000) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -87,9 +87,9 @@ const FlightCard = (props) => {
             </div>
 
             <div className="mt-4 flex justify-between items-center">
-              <button onClick={isOpenPaymentHandler} className="bg-blue-500 text-white px-4 py-1 rounded">
+              {/* <button onClick={isOpenPaymentHandler} className="bg-blue-500 text-white px-4 py-1 rounded">
                 Book NOW
-              </button>
+              </button> */}
               <p className="text-sm text-gray-600">Lock this price starting from ₹ 287</p>
             </div>
 
