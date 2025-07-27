@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
 import CryptoJS from 'crypto-js';
-import { useNavigate } from 'react-router';
-import { addUser, getUserByEmail } from '../../IndexDb/IndexDB';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Authactions } from '../../Reduxstore/Auth-slice/auth-slice.'
+import { useNavigate } from 'react-router';
 
-const AuthForm = () => {
+import { addUser, getUserByEmail } from '../../IndexDb/IndexDB';
+import { Authactions } from '../../Reduxstore/Auth-slice/auth-slice.';
+
+function AuthForm() {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const AuthForm = () => {
       [name]: value,
     }));
   };
-  console.log(authForm)
+  console.log(authForm);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -84,18 +85,15 @@ const AuthForm = () => {
     }
   };
 
-  const switchHandler =()=>{
-
-    setIsLogin(!isLogin)
+  const switchHandler = () => {
+    setIsLogin(!isLogin);
     setAuthForm({
-        name: '',
-        email: '',
-        password: '',
-        role: '',
-      });
-  }
-
-  
+      name: '',
+      email: '',
+      password: '',
+      role: '',
+    });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-400 text-foreground">
@@ -113,6 +111,7 @@ const AuthForm = () => {
           >
             Login
           </button>
+
           <button
             className={`px-4 py-2 rounded-lg focus:outline-none ${
               !isLogin
@@ -129,31 +128,35 @@ const AuthForm = () => {
           <form className="space-y-4" onSubmit={submitHandler}>
             <div>
               <label className="block text-sm font-medium text-muted-foreground">Email</label>
+
               <input
-                type="email"
+                required
+                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-primary"
                 name="email"
+                placeholder="Enter the email"
+                type="email"
                 value={authForm.email}
                 onChange={inputHandleChange}
-                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-primary"
-                required
-                placeholder="Enter the email"
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-muted-foreground">Password</label>
+
               <input
-                type="password"
+                required
+                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-primary"
                 name="password"
+                placeholder="Enter the password"
+                type="password"
                 value={authForm.password}
                 onChange={inputHandleChange}
-                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-primary"
-                required
-                placeholder="Enter the password"
               />
             </div>
+
             <button
-              type="submit"
               className="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              type="submit"
             >
               Login
             </button>
@@ -162,57 +165,67 @@ const AuthForm = () => {
           <form className="space-y-4" onSubmit={submitHandler}>
             <div>
               <label className="block text-sm font-medium text-muted-foreground">Name</label>
+
               <input
-                type="text"
+                required
+                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-secondary"
                 name="name"
+                placeholder="Enter the name"
+                type="text"
                 value={authForm.name}
                 onChange={inputHandleChange}
-                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-secondary"
-                required
-                placeholder="Enter the name"
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-muted-foreground">Email</label>
+
               <input
-                type="email"
+                required
+                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-secondary"
                 name="email"
+                placeholder="Enter the email"
+                type="email"
                 value={authForm.email}
                 onChange={inputHandleChange}
-                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-secondary"
-                required
-                placeholder="Enter the email"
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-muted-foreground">Password</label>
+
               <input
-                type="password"
+                required
+                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-secondary"
                 name="password"
+                placeholder="Enter the password"
+                type="password"
                 value={authForm.password}
                 onChange={inputHandleChange}
-                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-secondary"
-                required
-                placeholder="Enter the password"
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-muted-foreground">Role</label>
+
               <select
+                required
+                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-secondary"
                 name="role"
                 value={authForm.role}
                 onChange={inputHandleChange}
-                className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:ring focus:ring-secondary"
-                required
               >
                 <option value="">Select Role</option>
+
                 <option value="admin">Admin</option>
+
                 <option value="user">User</option>
               </select>
             </div>
+
             <button
-              type="submit"
               className="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              type="submit"
             >
               Signup
             </button>
@@ -221,6 +234,6 @@ const AuthForm = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AuthForm;

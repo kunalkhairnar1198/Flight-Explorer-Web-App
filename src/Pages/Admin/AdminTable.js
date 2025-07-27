@@ -1,16 +1,17 @@
-import React from "react";
-import BookingDetail from "./BookingDetail";
-import AddFlights from "./AddFlights";
+import React from 'react';
 
-const AdminTable = ({ activeComponent }) => {
- 
-  console.log("COMPONENT RENDER");
+import AddFlights from './AddFlights';
+import BookingDetail from './BookingDetail';
+
+function AdminTable({ activeComponent }) {
+  console.log('COMPONENT RENDER');
   return (
     <>
-      {activeComponent === "booking" && <BookingDetail />}
-      {activeComponent === "addFlight" && <AddFlights />}
+      {activeComponent === 'booking' && <BookingDetail />}
+
+      {activeComponent === 'addFlight' && <AddFlights />}
     </>
   );
-};
+}
 
 export default AdminTable;

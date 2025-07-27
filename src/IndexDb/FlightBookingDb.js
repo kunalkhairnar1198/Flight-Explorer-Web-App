@@ -12,13 +12,12 @@ const initializeDB = async () => {
   return db;
 };
 
-
 export const saveBooking = async (booking) => {
   const db = await initializeDB();
-  const tx = db.transaction('bookings','readwrite')
-  await tx.objectStore('bookings').put(booking)
+  const tx = db.transaction('bookings', 'readwrite');
+  await tx.objectStore('bookings').put(booking);
   await tx.done;
-  console.log('booking saved to indexdb',booking)
+  console.log('booking saved to indexdb', booking);
 };
 
 export const getBookingsByUserId = async (userId) => {
@@ -26,7 +25,7 @@ export const getBookingsByUserId = async (userId) => {
   const tx = db.transaction('bookings', 'readonly');
   const index = tx.objectStore('bookings').index('userId');
   const bookings = await index.getAll(userId);
-  console.log(bookings)
+  console.log(bookings);
   return bookings;
 };
 

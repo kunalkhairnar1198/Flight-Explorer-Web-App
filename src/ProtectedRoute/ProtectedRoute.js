@@ -1,10 +1,8 @@
-import React from 'react';
 import { Navigate } from 'react-router';
 
-const ProtectedRoute = ({ children, allowedRole }) => {
-
+function ProtectedRoute({ children, allowedRole }) {
   const userRole = localStorage.getItem('role'); // Get user role from localStorage
-//   console.log(userRole);
+  //   console.log(userRole);
 
   if (!userRole) {
     // If no role is found, redirect to the login page (assuming '/' is login)
@@ -18,6 +16,6 @@ const ProtectedRoute = ({ children, allowedRole }) => {
 
   // If role is allowed, render the children (the protected component)
   return children;
-};
+}
 
 export default ProtectedRoute;

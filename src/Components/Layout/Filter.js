@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-const Filter = () => {
+function Filter() {
   const [price, setPrice] = React.useState(500);
 
   const handlePriceChange = (event) => {
@@ -14,65 +14,71 @@ const Filter = () => {
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
             {/* Price Range */}
             <div className="w-full">
-              <label className="block text-gray-700 font-medium mb-2">
-                Price Range: ${price}
-              </label>
+              <label className="block text-gray-700 font-medium mb-2">Price Range: ${price}</label>
+
               <input
-                type="range"
-                min="0"
+                className="w-full bg-gray-200 rounded-lg focus:outline-none focus:ring focus:ring-indigo-300"
                 max="10000"
+                min="0"
+                type="range"
                 value={price}
                 onChange={handlePriceChange}
-                className="w-full bg-gray-200 rounded-lg focus:outline-none focus:ring focus:ring-indigo-300"
               />
             </div>
 
             {/* Airlines */}
             <div className="w-full">
-              <label className="block text-gray-700 font-medium mb-2">
-                Airlines
-              </label>
+              <label className="block text-gray-700 font-medium mb-2">Airlines</label>
+
               <select className="w-full bg-gray-200 border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-indigo-500">
                 <option>Any</option>
+
                 <option>Air India</option>
+
                 <option>IndiGo</option>
+
                 <option>SpiceJet</option>
               </select>
             </div>
 
             {/* Stops */}
             <div className="w-full">
-              <label className="block text-gray-700 font-medium mb-2">
-                Stops
-              </label>
+              <label className="block text-gray-700 font-medium mb-2">Stops</label>
+
               <select className="w-full bg-gray-200 border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-indigo-500">
                 <option>Non-stop</option>
+
                 <option>1-stop</option>
+
                 <option>2+ stops</option>
               </select>
             </div>
 
             {/* Departure */}
             <div className="w-full">
-              <label className="block text-gray-700 font-medium mb-2">
-                Departure
-              </label>
+              <label className="block text-gray-700 font-medium mb-2">Departure</label>
+
               <select className="w-full bg-gray-200 border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-indigo-500">
                 <option>Morning</option>
+
                 <option>Afternoon</option>
+
                 <option>Evening</option>
+
                 <option>Night</option>
               </select>
             </div>
 
             <div className="w-full">
-              <label className="block text-gray-700 font-medium mb-2">
-                Arrival
-              </label>
+              <label className="block text-gray-700 font-medium mb-2">Arrival</label>
+
               <select className="w-full bg-gray-200 border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:bg-white focus:border-indigo-500">
                 <option>Morning</option>
+
                 <option>Afternoon</option>
+
                 <option>Evening</option>
+
                 <option>Night</option>
               </select>
             </div>
@@ -81,6 +87,6 @@ const Filter = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Filter;

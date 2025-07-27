@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-// import { useDispatch } from 'react-redux';
-// import { UiActions } from '../../Reduxstore/Ui-slice/ui-slice';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
-import FlightData from '../../FlightData/FlightDataind.json'
 
+import FlightData from '../../FlightData/FlightDataind.json';
 
-const FlightCard = (props) => {
+function FlightCard(props) {
   const [flightData, setFlights] = useState([]);
   // const dispatch = useDispatch();
 
@@ -13,9 +11,7 @@ const FlightCard = (props) => {
   //   dispatch(UiActions.isOpenHandle(true));
   // };
 
-  const generateRandomPrice = (min = 3000, max = 10000) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+  const generateRandomPrice = (min = 3000, max = 10000) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   const calculateDiscount = (originalPrice, discountRate = 20) => {
     return Math.floor(originalPrice - (originalPrice * discountRate) / 100);
@@ -25,8 +21,12 @@ const FlightCard = (props) => {
     const updatedFlights = FlightData.map((flight) => {
       const originalPrice = flight.price || generateRandomPrice();
       const discountPrice = calculateDiscount(originalPrice);
-
-      return { ...flight, price: originalPrice, discountPrice, id: Math.random().toString() };
+      return {
+        ...flight,
+        price: originalPrice,
+        discountPrice,
+        id: flight.id || Math.random().toString(), // Prefer flight.id if available
+      };
     });
 
     setFlights(updatedFlights);
@@ -34,18 +34,21 @@ const FlightCard = (props) => {
 
   return (
     <>
-      {flightData.map((flight, index) => (
-        <div className="max-w-md bg-white shadow-lg rounded-lg overflow-hidden" key={index}>
+      {flightData.map((flight) => (
+        <div key={flight.id} className="max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="ml-4">
                   <h2 className="text-lg font-semibold">{flight.airline}</h2>
+
                   <p className="text-sm text-gray-600">{flight.flightId}</p>
                 </div>
               </div>
+
               <div className="text-right">
-                <p className="text-lg font-semibold">₹ {flight.discountPrice}</p>
+                <p className="text-lg font-semibold">₹{flight.discountPrice}</p>
+
                 <p className="text-sm text-gray-600">per adult</p>
               </div>
             </div>
@@ -59,8 +62,10 @@ const FlightCard = (props) => {
                       minute: '2-digit',
                     })}
                   </p>
+
                   <p className="text-sm text-gray-600">{flight.origin}</p>
                 </div>
+
                 <div className="text-center">
                   <p className="text-sm text-gray-600">
                     {new Date(flight.arrivalTime).toLocaleTimeString([], {
@@ -68,8 +73,10 @@ const FlightCard = (props) => {
                       minute: '2-digit',
                     })}
                   </p>
+
                   <p className="text-sm text-green-600">Estimated</p>
                 </div>
+
                 <div className="ml-6">
                   <p className="text-lg text-end font-semibold">
                     {new Date(flight.arrivalTime).toLocaleTimeString([], {
@@ -77,6 +84,7 @@ const FlightCard = (props) => {
                       minute: '2-digit',
                     })}
                   </p>
+
                   <p className="text-sm text-end text-gray-600">{flight.destination}</p>
                 </div>
               </div>
@@ -87,14 +95,11 @@ const FlightCard = (props) => {
             </div>
 
             <div className="mt-4 flex justify-between items-center">
-              {/* <button onClick={isOpenPaymentHandler} className="bg-blue-500 text-white px-4 py-1 rounded">
-                Book NOW
-              </button> */}
               <p className="text-sm text-gray-600">Lock this price starting from ₹ 287</p>
             </div>
 
             <div className="mt-4 text-right">
-              <NavLink to={`/flightdetail/${flight.id}`} state={flight} className="text-blue-500 text-sm">
+              <NavLink className="text-blue-500 text-sm" state={flight} to={`/flightdetail/${flight.id}`}>
                 View Flight Details
               </NavLink>
             </div>
@@ -103,6 +108,6 @@ const FlightCard = (props) => {
       ))}
     </>
   );
-};
+}
 
 export default FlightCard;

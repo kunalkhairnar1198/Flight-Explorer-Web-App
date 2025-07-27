@@ -1,13 +1,13 @@
 import { useEffect, useCallback } from 'react';
 
-const useInactive = (logoutHandler, timeout = 300000) => { // 300000 ms = 5 minutes
-
+const useInactive = (logoutHandler, timeout = 300000) => {
+  // 300000 ms = 5 minutes
 
   const resetTimer = useCallback(() => {
     window.clearTimeout(window.inactivityTimer);
 
     window.inactivityTimer = window.setTimeout(() => {
-      logoutHandler(); 
+      logoutHandler();
     }, timeout);
   }, [logoutHandler, timeout]);
 
